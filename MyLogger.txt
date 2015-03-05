@@ -1,0 +1,177 @@
+public class HTTP {
+	
+	public static void main(String[] args) throws IOException  {
+		Scanner scanner=new Scanner(System.in);
+		System.out.println("Make your choice From 1 To 3");
+		
+		System.out.println("Press 1 for ConsoleLogger");
+		System.out.println("Press 2 for FileLogger");
+		System.out.println("Press 3 for HTTPLogger");
+		System.out.println("Make your choice!");
+		int choice=scanner.nextInt();
+		switch(choice)
+		{
+		case 1:System.out.println("ConsoleLogger");fromConsole(); break;
+		case 2:System.out.println("From File"); try {
+				fromFile();
+			} catch (FileNotFoundException e) {
+				System.out.println("File not found");
+			}break;
+		case 3: System.out.println("From HTTP");fromHTTP(); break;
+		default : System.out.println("Wrong choce. Try next time!");
+		
+		}
+		
+		
+	}
+	public static void fromConsole()
+	{
+		Scanner scanner=new Scanner(System.in);
+		ConsoleLogger cl=new ConsoleLogger();
+		System.out.println("Please insert your level and message !");
+		int level=scanner.nextInt();
+		String message=scanner.nextLine();
+		cl.log(level, message);
+
+	}
+	public static void fromFile() throws FileNotFoundException
+	{
+		String message="";
+		String path="D:\\Downloads\\message.txt";
+		File file=new File(path);
+		Scanner diskScanner=new Scanner(file);
+		 while (diskScanner.hasNextLine())
+         {
+             
+            message = diskScanner.nextLine();
+         }
+		 System.out.println("The message is read! Please insert level! ");
+		Scanner scanner=new Scanner(System.in);
+		int level=scanner.nextInt();
+		FileLogger fl=new FileLogger();
+		fl.log(level, message);
+		
+	}
+	
+         public static void fromHTTP() throws IOException
+	{   
+		System.out.println("Please insert your level :");
+		Scanner scanner= new Scanner(System.in);
+		int level=scanner.nextInt();
+		String message="";
+		 String query="Hello";   
+		 String encodedQuery = URLEncoder.encode(query, "UTF-8");
+	       
+	        String postData = "e=" + encodedQuery;
+	        URL url = new URL("http://echo.itcuties.com");
+	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	        connection.setDoOutput(true);
+	        connection.setRequestMethod("POST");
+	        java.io.OutputStream os = connection.getOutputStream();
+	        os.write(postData.getBytes());
+	        Scanner httpResponseScanner = new Scanner(connection.getInputStream());
+	        while(httpResponseScanner.hasNextLine()) {
+		       message= httpResponseScanner.nextLine();
+		    }
+	        httpResponseScanner.close();
+	        HTTPLogger hl=new HTTPLogger();
+	        hl.log(level, message);
+		
+		
+	}
+
+}
+
+
+public class ConsoleLogger implements MyLogger {
+	public int level;
+	public String message;
+	Scanner scanner=new Scanner(System.in);
+	@Override
+	public void log(int level, String message) {
+		this.level=level;
+		this.message=message;
+		String date = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).format(System.currentTimeMillis());
+		if(this.level==1)
+		{
+			System.out.println("INFO : "+ date +"   "+ message);
+		}
+		if(this.level==2)
+		{
+			System.out.println("WARNING : "+ date +"   "+ message);
+		}
+		if(this.level==3)
+		{
+			System.out.println("PLSCHECKFFS : "+ date +"   "+ message);
+		}
+
+
+
+public class FileLogger implements MyLogger {
+	public int level;
+	public String message;
+	Scanner scanner=new Scanner(System.in);
+	@Override
+	public void log(int level, String message) {
+		this.level=level;
+		this.message=message;
+		String date = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).format(System.currentTimeMillis());
+		if(this.level==1)
+		{
+			System.out.println("INFO : "+ date +"   "+ message);
+		}
+		if(this.level==2)
+		{
+			System.out.println("WARNING : "+ date +"   "+ message);
+		}
+		if(this.level==3)
+		{
+			System.out.println("PLSCHECKFFS : "+ date +"   "+ message);
+		}
+		
+	}
+}
+
+
+public class HTTPLogger implements MyLogger {
+	public int level;
+	public String message;
+	Scanner scanner=new Scanner(System.in);
+	@Override
+	public void log(int level, String message) {
+		this.level=level;
+		this.message=message;
+		String date = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).format(System.currentTimeMillis());
+		if(this.level==1)
+		{
+			System.out.println("INFO : "+ date +"   "+ message);
+		}
+		if(this.level==2)
+		{
+			System.out.println("WARNING : "+ date +"   "+ message);
+		}
+		if(this.level==3)
+		{
+			System.out.println("PLSCHECKFFS : "+ date +"   "+ message);
+		}
+		
+	}
+
+}
+
+
+
+public interface MyLogger {
+	public void log(int level, String message);
+
+	
+}
+
+
+
+
+
+
+
+
+

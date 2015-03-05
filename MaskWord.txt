@@ -1,0 +1,73 @@
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
+
+public class MaskTheWord {
+
+	public static void main(String[] args) {
+		String str = " Yesterday, I took my dog for a walk.\n It was crazy! My dog wanted only food.";
+		String text=str.replaceAll("[\n\r]", "");
+		String word []={"yesterday", "dog", "food", "walk"};
+		StringBuilder sb = new StringBuilder(50);
+		StringBuilder sbu = new StringBuilder(50);
+		String fin="";
+		sb.append(text.toLowerCase());
+         int max=maxValue(word,text);
+	   		
+		for(int t=0;t<max;t++){
+					
+		  for(int i=0 ; i<word.length;i++){
+		      
+			word[i].toLowerCase();
+			
+				for(int a=0;a<word[i].length();a++)
+				{
+					sbu.append("*");
+					
+				}
+				fin=word[i];
+				if(sb.toString().contains(fin))
+				{
+					sb.replace(sb.indexOf(fin), sb.indexOf(fin)+fin.length(), sbu.toString());
+				}
+				sbu.delete(0, word[i].length());
+				
+				
+		 }
+	
+			
+			
+	}
+		System.out.println(sb);
+	}
+	public static int maxValue (String[] word,String text)
+	{
+		int arr[]=new int[50];
+		int len;
+		int max = 0;    
+		for(int r=0;r<word.length;r++)
+		{
+			len=text.split(word[r]).length-1;
+			arr[r]=len;
+			
+		}
+
+	    for (int i = 0; i < arr.length; i++) {
+	        arr[i] = max;
+
+
+	        for (int j = i+1; j<arr.length; j++) {
+	            if (arr[j] > max) {
+	               max = arr[j];
+	            }
+
+	        }
+	    }
+	return max;
+	}
+	
+		
+}
+	
+ 
+ 

@@ -1,0 +1,215 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+
+
+public class CSVReader {
+
+	public static void main(String[] args) throws IOException {
+		
+		System.out.println("For command SHOW press 1");
+		System.out.println("For command FIND press 2");
+		System.out.println("For command SUM press 3");
+		System.out.println("For command SELECT press 4");
+		Scanner scanner= new Scanner(System.in);
+		int choice=scanner.nextInt();
+		switch(choice)
+		{
+		case 1:System.out.println("Command: Show");show();break;
+		case 2: System.out.println("Command: Find");find();break;
+		case 3: System.out.println("Command: Sum");sum(); break;
+		case 4: System.out.println("Command Select");select();break;
+		default: System.out.println("Wrong choice");
+		}
+		
+	}
+		public static void show() throws IOException
+		{
+			String[][] names=new String[24][24];
+			 
+			File file = new File("C:\\Users\\ex1.csv");
+			 
+			BufferedReader bufRdr  = new BufferedReader(new FileReader(file));
+			String line = null;
+			int row = 0;
+			int col = 0;
+			 
+			
+			while((line = bufRdr.readLine()) != null)
+			{
+				StringTokenizer st = new StringTokenizer(line,",");
+				while (st.hasMoreTokens())
+				{
+					
+					names[row][col] = st.nextToken();
+
+					col++;
+				}
+				row++;
+			}
+			System.out.println("The column names are: ");
+			System.out.println(names[0][0]);
+			bufRdr.close();
+			
+		}
+		
+		public static void find() throws IOException
+		{
+			Scanner scanner=new Scanner(System.in);
+			String cells[][]= new String[80][80];
+			File file = new File("C:\\Users\\ex1.csv");
+			 
+			BufferedReader bufRdr  = new BufferedReader(new FileReader(file));
+			String line = null;
+			int row = 0;
+			int col = 0;
+			
+			while((line = bufRdr.readLine()) != null)
+			{
+				StringTokenizer st = new StringTokenizer(line,",");
+				while (st.hasMoreTokens())
+				{
+					
+					cells[row][col] = st.nextToken();
+
+					
+					if(cells[row][col].contains("6"))
+					{
+						System.out.println(cells[row][col]);
+						
+						
+					}
+					else
+					{
+						System.out.println("Item do not exist");
+					}
+					
+					col++;
+				}
+				row++;
+			}
+			
+			bufRdr.close();
+		}
+	public static void sum() throws IOException
+	{
+		String cells[][]= new String[80][80];
+		File file = new File("C:\\Users\\ex1.csv");
+		int number=0;
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		BufferedReader bufRdr  = new BufferedReader(new FileReader(file));
+		String line = null;
+		int row = 0;
+		int col = 0;
+		int word=0;
+		Scanner scanner= new Scanner(System.in);
+		System.out.println("Insert column name :");
+		String search=scanner.next();
+		while((line = bufRdr.readLine()) != null)
+		{
+			StringTokenizer st = new StringTokenizer(line,";");
+			while (st.hasMoreTokens())
+			{
+				
+				cells[row][col] = st.nextToken();
+
+				if(cells[row][col].contains(search))
+				{
+				word=col;
+				}
+				
+				col++;
+			}
+			row++;
+		}
+		bufRdr.close();
+		
+		
+		while ((line = br.readLine()) != null) {
+		    String[] cols = line.split(";");
+		   
+		  
+		   try
+		   {
+			 int  numbers=Integer.parseInt(cols[word]);
+			   number+=numbers;
+		   }
+		   catch(NumberFormatException e)
+		   {
+			   
+			   continue;
+		   }
+		                                                                    
+		}
+		if(number==0)
+		{
+			System.out.println("There is no number");
+		}
+		else{
+		     System.out.println("The sum is:  "+ number);
+		
+		}
+		
+		br.close();
+		
+		
+	}
+	public static void select() throws IOException
+	{
+		Scanner scanner= new Scanner(System.in);
+		System.out.println("Please insert the column name separated by commas");
+		String column=scanner.nextLine();
+		String arr[]=column.split("[,]");
+		int array[]=new int[arr.length];
+		String cells[][]= new String[80][80];
+		File file = new File("C:\\Users\\ex1.csv");
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		BufferedReader bufRdr  = new BufferedReader(new FileReader(file));
+		String line = null;
+		int row = 0;
+		int col = 0;
+		
+		 
+		
+		while((line = bufRdr.readLine()) != null)
+		{
+			StringTokenizer st = new StringTokenizer(line,";");
+			while (st.hasMoreTokens())
+			{
+				
+				cells[row][col] = st.nextToken();
+
+				
+				for(int i=0;i<arr.length;i++)
+				{
+				if(cells[row][col].contains(arr[i]))
+				{
+					array[i]=col;
+					
+				}
+				}
+				col++;
+			}
+			row++;
+		}
+			bufRdr.close();
+		while ((line = br.readLine()) != null) {
+		    String[] cols = line.split(";");
+		   for(int i=0;i<array.length;i++)
+		   {
+		     System.out.print(cols[array[i]]+"\t");
+		     
+		   }
+		        System.out.println();                                                            
+		}
+		
+		
+			br.close();
+		
+	}
+}
