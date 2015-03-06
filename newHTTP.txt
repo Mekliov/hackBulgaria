@@ -1,0 +1,265 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class HTTP {
+	
+	public static void main(String[] args) throws IOException  {
+		Scanner scanner=new Scanner(System.in);
+		System.out.println("Make your choice From 1 To 3");
+		
+		System.out.println("Press 1 for ConsoleLogger");
+		System.out.println("Press 2 for FileLogger");
+		System.out.println("Press 3 for HTTPLogger");
+		System.out.println("Make your choice!");
+		int choice=scanner.nextInt();
+		switch(choice)
+		{
+		case 1:System.out.println("ConsoleLogger");fromConsole(); break;
+		case 2:System.out.println("From File"); try {
+				fromFile();
+			} catch (FileNotFoundException e) {
+				System.out.println("File not found");
+			}break;
+		case 3: System.out.println("From HTTP");fromHTTP(); break;
+		default : System.out.println("Wrong choce. Try next time!");
+		
+		}
+		
+		
+	}
+	public static void fromConsole()
+	{
+		Scanner scanner=new Scanner(System.in);
+		ConsoleLogger cl=new ConsoleLogger();
+		System.out.println("Please insert your level and message !");
+		int level=scanner.nextInt();
+		String message=scanner.nextLine();
+		cl.log(level, message);
+
+	}
+	public static void fromFile() throws FileNotFoundException
+	{
+		String message="";
+		String path="D:\\Downloads\\message.txt";
+		File file=new File(path);
+		Scanner diskScanner=new Scanner(file);
+		 while (diskScanner.hasNextLine())
+         {
+             
+            message = diskScanner.nextLine();
+         }
+		 System.out.println("The message is read! Please insert level! ");
+		Scanner scanner=new Scanner(System.in);
+		int level=scanner.nextInt();
+		FileLogger fl=new FileLogger();
+		fl.log(level, message);
+		
+	}
+	public static void fromHTTP() throws IOException
+	{   
+
+		 String message="";
+		System.out.println("Please insert your level an message :");
+		Scanner scanner= new Scanner(System.in);
+		int level=scanner.nextInt();
+	    message=scanner.nextLine();   
+		HTTPLogger hl=new HTTPLogger();
+	        hl.log(level,message );
+		
+		
+	}
+
+}
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+
+public class FileLogger implements MyLogger {
+	public int level;
+	public String message;
+	Scanner scanner=new Scanner(System.in);
+	@Override
+	public void log(int level, String message) {
+		this.level=level;
+		this.message=message;
+		String date = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).format(System.currentTimeMillis());
+		if(this.level==1)
+		{
+			System.out.println("INFO : "+ date +"   "+ message);
+		}
+		if(this.level==2)
+		{
+			System.out.println("WARNING : "+ date +"   "+ message);
+		}
+		if(this.level==3)
+		{
+			System.out.println("PLSCHECKFFS : "+ date +"   "+ message);
+		}
+		
+	}
+}
+
+
+
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class ConsoleLogger implements MyLogger {
+	public int level;
+	public String message;
+	Scanner scanner=new Scanner(System.in);
+	@Override
+	public void log(int level, String message) {
+		this.level=level;
+		this.message=message;
+		String date = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).format(System.currentTimeMillis());
+		if(this.level==1)
+		{
+			System.out.println("INFO : "+ date +"   "+ message);
+		}
+		if(this.level==2)
+		{
+			System.out.println("WARNING : "+ date +"   "+ message);
+		}
+		if(this.level==3)
+		{
+			System.out.println("PLSCHECKFFS : "+ date +"   "+ message);
+		}
+		
+		
+		
+		
+		
+	}
+	
+	
+		
+	}
+	
+	
+	import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+
+
+public interface MyLogger {
+	public void log(int level, String message) throws IOException;
+
+	
+}
+
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.util.Scanner;
+
+
+public class HTTPLogger implements MyLogger {
+	public int level;
+	public String message;
+	Scanner scanner=new Scanner(System.in);
+	public void log(int level,String message) throws IOException {
+		this.level=level;
+		this.message=message;
+		
+		 String query=message;   
+		 String encodedQuery = URLEncoder.encode(query, "UTF-8");
+	       	
+		if(this.level==1)
+		{
+			String date = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).format(System.currentTimeMillis());
+			 StringBuilder sb = new StringBuilder(50);
+	        
+			
+		        URL url = new URL("http://abv.bg");
+		        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		        connection.setDoOutput(true);
+		        connection.setRequestMethod("POST");
+		        java.io.OutputStream os = connection.getOutputStream();
+		      
+			String info="INFO";
+			 sb.append(info+"  " +date+" "+ encodedQuery);
+			 String postData = "e=" + sb.toString();
+			os.write(postData.getBytes());
+			 Scanner httpResponseScanner = new Scanner(connection.getInputStream());
+			while(httpResponseScanner.hasNextLine()) {
+			       message= httpResponseScanner.nextLine();
+			       System.out.println(message);
+			    }
+		        httpResponseScanner.close();
+		}
+		if(this.level==2)
+		{
+			String date = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).format(System.currentTimeMillis());
+			 StringBuilder sb = new StringBuilder(50);
+	        
+			
+		        URL url = new URL("http://abv.bg");
+		        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		        connection.setDoOutput(true);
+		        connection.setRequestMethod("POST");
+		        java.io.OutputStream os = connection.getOutputStream();
+		      
+			String info="WARNING";
+			 sb.append(info+"  " +date+" "+ encodedQuery);
+			 String postData = "e=" + sb.toString();
+			os.write(postData.getBytes());
+			  Scanner httpResponseScanner = new Scanner(connection.getInputStream());
+			while(httpResponseScanner.hasNextLine()) {
+			       message= httpResponseScanner.nextLine();
+			       System.out.println(message);
+			    }
+		        httpResponseScanner.close();
+		}
+		if(this.level==3)
+		{
+			String date = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).format(System.currentTimeMillis());
+			 StringBuilder sb = new StringBuilder(50);
+	        
+			
+		        URL url = new URL("http://abv.bg");
+		        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		        connection.setDoOutput(true);
+		        connection.setRequestMethod("POST");
+		        java.io.OutputStream os = connection.getOutputStream();
+		      
+ 			String info="PLSCHECKFFS";
+			 sb.append(info+"  " +date+" "+ encodedQuery);
+			 String postData = "e=" + sb.toString();
+			os.write(postData.getBytes());
+			 Scanner httpResponseScanner = new Scanner(connection.getInputStream());
+			while(httpResponseScanner.hasNextLine()) {
+			       message= httpResponseScanner.nextLine();
+			       System.out.println(message);
+			    }
+		        httpResponseScanner.close();
+			
+		}
+		
+	}
+	
+
+}
+
+
+
