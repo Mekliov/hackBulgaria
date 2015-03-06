@@ -76,11 +76,6 @@ public class HTTP {
 }
 
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import java.util.Scanner;
-
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.text.SimpleDateFormat;
@@ -134,46 +129,7 @@ public class FileLogger implements MyLogger {
 }
 
 
-
-
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-public class ConsoleLogger implements MyLogger {
-	public int level;
-	public String message;
-	Scanner scanner=new Scanner(System.in);
-	@Override
-	public void log(int level, String message) {
-		this.level=level;
-		this.message=message;
-		String date = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).format(System.currentTimeMillis());
-		if(this.level==1)
-		{
-			System.out.println("INFO : "+ date +"   "+ message);
-		}
-		if(this.level==2)
-		{
-			System.out.println("WARNING : "+ date +"   "+ message);
-		}
-		if(this.level==3)
-		{
-			System.out.println("PLSCHECKFFS : "+ date +"   "+ message);
-		}
-		
-		
-		
-		
-		
-	}
-	
-	
-		
-	}
-	
-	
-	import java.io.IOException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -285,5 +241,43 @@ public class HTTPLogger implements MyLogger {
 
 }
 
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+public class ConsoleLogger implements MyLogger {
+	public int level;
+	public String message;
+	Scanner scanner=new Scanner(System.in);
+	@Override
+	public void log(int level, String message) {
+		this.level=level;
+		this.message=message;
+		String date = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT).format(System.currentTimeMillis());
+		if(this.level==1)
+		{
+			System.out.println("INFO : "+ date +"   "+ message);
+		}
+		if(this.level==2)
+		{
+			System.out.println("WARNING : "+ date +"   "+ message);
+		}
+		if(this.level==3)
+		{
+			System.out.println("PLSCHECKFFS : "+ date +"   "+ message);
+		}
+		
+		
+		
+		
+		
+	}
+	
+	
+		
+	}
+	
+	
+	
 
 
